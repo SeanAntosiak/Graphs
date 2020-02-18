@@ -1,3 +1,5 @@
+import random
+
 class User:
     def __init__(self, name):
         self.name = name
@@ -42,11 +44,35 @@ class SocialGraph:
         self.last_id = 0
         self.users = {}
         self.friendships = {}
-        # !!!! IMPLEMENT ME
 
-        # Add users
+        if num_users < avg_friendships:
+            print('The number of users must be greater than the average number of friendships.')
+            return
 
-        # Create friendships
+        for _ in range(num_users):
+            self.add_user(self.random_name())
+
+        # creates a list of user ids
+        user_ids = []
+        for i in range(1, num_users):
+            user_ids.append(i)
+
+        # gets all user combinations where user 1 has lower id than user 2
+        combos = []
+        user_ids = []
+        for i in range(1, num_users):
+            user_ids.append(i)
+
+        for user1 in user_ids:
+            for user2 in user_ids[user1 + 1:]:
+                combos.append((user1, user2))
+
+        # gets the number of needed connections and makes that many
+        needed = num_users*avg_friendships
+        connections = random.sample(combos, needed // 2)
+        for con in connections:
+            self.add_friendship(con[0], con[1])
+
 
     def get_all_social_paths(self, user_id):
         """
@@ -61,6 +87,19 @@ class SocialGraph:
         # !!!! IMPLEMENT ME
         return visited
 
+    def random_name(self):
+        # sets the letters to generate the random name from
+        letters = 'wretyuioasdhjklzcvbm'
+
+        # randomly decides the length of the name
+        length = random.choice(range(4, 8))
+
+        # creates the name
+        name = ''
+        for _ in range(length):
+            name += random.choice(letters)
+        return(name)
+
 
 if __name__ == '__main__':
     sg = SocialGraph()
@@ -68,3 +107,5 @@ if __name__ == '__main__':
     print(sg.friendships)
     connections = sg.get_all_social_paths(1)
     print(connections)
+
+test = SocialGraph()
