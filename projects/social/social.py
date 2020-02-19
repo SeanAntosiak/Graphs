@@ -1,4 +1,5 @@
 import random
+from util import Queue
 
 class User:
     def __init__(self, name):
@@ -52,15 +53,10 @@ class SocialGraph:
         for _ in range(num_users):
             self.add_user(self.random_name())
 
-        # creates a list of user ids
-        user_ids = []
-        for i in range(1, num_users):
-            user_ids.append(i)
-
         # gets all user combinations where user 1 has lower id than user 2
         combos = []
         user_ids = []
-        for i in range(1, num_users):
+        for i in range(1, num_users+1):
             user_ids.append(i)
 
         for user1 in user_ids:
@@ -83,8 +79,22 @@ class SocialGraph:
 
         The key is the friend's ID and the value is the path.
         """
-        visited = {}  # Note that this is a dictionary, not a set
-        # !!!! IMPLEMENT ME
+        Q = Queue()
+        Q.enqueue([user_id])
+        visited = {}
+
+        while Q.size() > 0:
+            path = Q.dequeue()
+            last_friend = path[-1]
+
+            if last_friend not in visited:
+                visited[last_friend] = path
+
+                for friend in self.friendships[last_friend]:
+                    # (Make a copy of the path before adding)
+                    new_path = path.copy()
+                    new_path.append(friend)
+                    Q.enqueue(new_path)
         return visited
 
     def random_name(self):
@@ -107,5 +117,3 @@ if __name__ == '__main__':
     print(sg.friendships)
     connections = sg.get_all_social_paths(1)
     print(connections)
-
-test = SocialGraph()
