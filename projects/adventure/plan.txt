@@ -1,0 +1,8 @@
+while length less than 500
+If there is a ?
+    go to first one and record direction and past room number
+    add direction you went to path
+    add new room and add direction to last room
+
+ELSE
+    use BFS to find a ? and go there adding movement to traversal
