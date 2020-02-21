@@ -21,7 +21,7 @@ room_graph=literal_eval(open(map_file, "r").read())
 world.load_graph(room_graph)
 
 # Print an ASCII map
-world.print_rooms()
+#world.print_rooms()
 
 
 # defines a function to add next rooms
@@ -82,7 +82,7 @@ traversal_path = []
 # adds start room to graph
 add_next_rooms(player, player_graph)
 
-while len(player_graph) < 224:
+while len(player_graph) < 500:
     current_room = player.current_room.id
     possible_next = player_graph[current_room]
 
@@ -115,12 +115,13 @@ while len(player_graph) < 224:
         # finds the directions to follow that path
         dirs = get_directions(player_graph, path)
 
+
         # moves the player to the room with a new path
         for dir in dirs:
             player.travel(dir)
 
         # updates the traversal with the path
-        traversal_path += path
+        traversal_path += dirs
 
 
     else:
@@ -135,16 +136,12 @@ while len(player_graph) < 224:
         current_room = player.current_room.id
 
         # adds next rooms exits to the graph
-        add_next_rooms(player, player_graph)
+        if current_room not in player_graph:
+            add_next_rooms(player, player_graph)
 
         # updates directions from past and current room
         player_graph[last_room][next_direction] = current_room
         player_graph[current_room][inv_dir(next_direction)] = last_room
-
-player_graph
-
-
-
 
 # TRAVERSAL TEST
 visited_rooms = set()
@@ -160,7 +157,6 @@ if len(visited_rooms) == len(room_graph):
 else:
     print("TESTS FAILED: INCOMPLETE TRAVERSAL")
     print(f"{len(room_graph) - len(visited_rooms)} unvisited rooms")
-
 
 
 #######
